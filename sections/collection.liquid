@@ -5,43 +5,277 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
 {% endcomment %}
 
-<h1>{{ collection.title }}</h1>
+<!-- =============================================
+     COLLECTION / ALL PRODUCTS PAGE
+     Shows all products with filters.
+     ============================================= -->
 
-<div class="collection-products">
-  {% paginate collection.products by 20 %}
-    {% for product in collection.products %}
-      <div class="collection-product">
-        {% if product.featured_image %}
-          {% render 'image',
-            class: 'collection-product__image',
-            image: product.featured_image,
-            url: product.url,
-            width: 400,
-            height: 400,
-            crop: 'center'
-          %}
-        {% endif %}
-        <div class="collection-product__content">
-          <p>{{ product.title | escape | link_to: product.url }}</p>
-          <p>{{ product.price | money }}</p>
-        </div>
-      </div>
-    {% endfor %}
-
-    {{ paginate | default_pagination }}
-  {% endpaginate %}
+<!-- Page Header -->
+<div class="collection-header">
+  <div class="container">
+    <h1 class="collection-header__title">
+      {{ collection.title | default: 'All Supplements' }}
+    </h1>
+    <p class="collection-header__sub">
+      {{ collection.description | default: 'Premium supplements. Lab tested. Result driven.' }}
+    </p>
+  </div>
 </div>
 
-{% stylesheet %}
-  .collection-products {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-  }
-{% endstylesheet %}
+<!-- Filter Bar -->
+<div class="collection-filters">
+  <div class="container">
+    <div class="filters__inner">
 
-{% schema %}
-{
-  "name": "t:general.collection",
-  "settings": []
+      <div class="filters__left">
+        <span class="filters__label">Filter:</span>
+
+        <a href="/collections/all" class="filter-pill {% if collection.handle == 'all' %}filter-pill--active{% endif %}">
+          All
+        </a>
+        <a href="/collections/protein" class="filter-pill {% if collection.handle == 'protein' %}filter-pill--active{% endif %}">
+          Protein
+        </a>
+        <a href="/collections/pre-workout" class="filter-pill {% if collection.handle == 'pre-workout' %}filter-pill--active{% endif %}">
+          Pre-Workout
+        </a>
+        <a href="/collections/creatine" class="filter-pill {% if collection.handle == 'creatine' %}filter-pill--active{% endif %}">
+          Creatine
+        </a>
+        <a href="/collections/bundles" class="filter-pill {% if collection.handle == 'bundles' %}filter-pill--active{% endif %}">
+          Bundles
+        </a>
+      </div>
+
+      <div class="filters__right">
+        <span class="filters__count">
+          {{ collection.products_count | default: 0 }} products
+        </span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Products Grid -->
+<section class="section">
+  <div class="container">
+
+    {% if collection.products.size > 0 %}
+
+      <div class="collection__grid">
+        {% for product in collection.products %}
+          <div class="product-card">
+
+            <!-- Product Image -->
+            <a href="{{ product.url }}" class="product-card__img">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 600 }}"
+                  alt="{{ product.title }}"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="product-card__placeholder">
+                  <span>💪</span>
+                </div>
+              {% endif %}
+
+              <!-- Badge -->
+              <div class="product-card__badge">
+                {% if product.compare_at_price > product.price %}
+                  <span class="badge badge--sale">Sale</span>
+                {% elsif product.tags contains 'new' %}
+                  <span class="badge badge--new">New</span>
+                {% else %}
+                  <span class="badge badge--hot">Best Seller</span>
+                {% endif %}
+              </div>
+            </a>
+
+            <!-- Product Info -->
+            <div class="product-card__body">
+
+              <div class="product-card__category">
+                {{ product.type | default: 'Supplement' }}
+              </div>
+
+              <h3 class="product-card__name">
+                <a href="{{ product.url }}">{{ product.title }}</a>
+              </h3>
+
+              <p class="product-card__sub">
+                {{ product.variants.first.title }}
+              </p>
+
+              <div class="product-card__stars">
+                ★★★★★
+                <span>({{ product.metafields.reviews.rating_count | default: '100+' }})</span>
+              </div>
+
+              <div class="product-card__footer">
+                <div>
+                  <span class="product-card__price">
+                    {{ product.price | money }}
+                  </span>
+                  {% if product.compare_at_price > product.price %}
+                    <span class="product-card__old-price">
+                      {{ product.compare_at_price | money }}
+                    </span>
+                  {% endif %}
+                </div>
+                <a href="{{ product.url }}" class="btn btn--primary">
+                  View
+                </a>
+              </div>
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+    {% else %}
+
+      <!-- Empty state — no products added yet -->
+      <div class="collection__empty">
+        <div class="collection__empty-icon">💪</div>
+        <h3>Products Coming Soon</h3>
+        <p>Add your products from Shopify Admin → Products → Add product</p>
+        <a href="/admin/products/new" class="btn btn--primary" style="margin-top: 20px;">
+          Add Products
+        </a>
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+/* Collection Header */
+.collection-header {
+  background: var(--color-black);
+  padding: 48px 0 36px;
+  border-bottom: 3px solid var(--color-orange);
 }
-{% endschema %}
+
+.collection-header__title {
+  color: var(--color-white);
+  margin-bottom: 10px;
+}
+
+.collection-header__sub {
+  color: #888888;
+  font-size: 15px;
+  margin: 0;
+}
+
+/* Filter Bar */
+.collection-filters {
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  padding: 16px 0;
+  position: sticky;
+  top: 64px;
+  z-index: 90;
+}
+
+.filters__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.filters__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filters__label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-right: 4px;
+}
+
+.filter-pill {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 3px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  background: var(--color-white);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.filter-pill:hover {
+  border-color: var(--color-orange);
+  color: var(--color-orange);
+}
+
+.filter-pill--active {
+  background: var(--color-orange);
+  color: var(--color-white);
+  border-color: var(--color-orange);
+}
+
+.filters__count {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Products Grid */
+.collection__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* Empty State */
+.collection__empty {
+  text-align: center;
+  padding: 80px 0;
+}
+
+.collection__empty-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+}
+
+.collection__empty h3 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  color: var(--color-black);
+  margin-bottom: 12px;
+}
+
+.collection__empty p {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 768px) {
+  .collection__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .collection-filters {
+    top: 56px;
+  }
+}
+
+@media (max-width: 480px) {
+  .collection__grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

@@ -5,48 +5,504 @@
   https://shopify.dev/docs/storefronts/themes/architecture/templates/product
 {% endcomment %}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
+<!-- =============================================
+     PRODUCT DETAIL PAGE
+     Shows single product with image,
+     price, variants, add to cart button.
+     ============================================= -->
 
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
+<section class="product-page">
+  <div class="container">
+    <div class="product-page__inner">
 
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
-
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
+      <!-- LEFT — Product Images -->
+      <div class="product-page__gallery">
+        <div class="product-page__main-img">
+          {% if product.featured_image %}
+            <img
+              id="mainProductImg"
+              src="{{ product.featured_image | image_url: width: 800 }}"
+              alt="{{ product.title }}"
+            >
+          {% else %}
+            <div class="product-page__img-placeholder">💪</div>
           {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
-      {% endfor %}
-    </select>
+        </div>
 
-    <input type="text" name="quantity" min="1" value="1">
+        <!-- Thumbnail Images -->
+        {% if product.images.size > 1 %}
+          <div class="product-page__thumbs">
+            {% for image in product.images limit: 4 %}
+              <img
+                src="{{ image | image_url: width: 200 }}"
+                alt="{{ product.title }}"
+                class="product-page__thumb {% if forloop.first %}active{% endif %}"
+                onclick="document.getElementById('mainProductImg').src='{{ image | image_url: width: 800 }}'; document.querySelectorAll('.product-page__thumb').forEach(t => t.classList.remove('active')); this.classList.add('active');"
+              >
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
-</div>
+      <!-- RIGHT — Product Info -->
+      <div class="product-page__info">
 
-{% schema %}
-{
-  "name": "t:general.product",
-  "settings": [],
-  "disabled_on": {
-    "groups": ["header", "footer"]
+        <!-- Breadcrumb -->
+        <div class="product-page__breadcrumb">
+          <a href="/">Home</a>
+          <span>/</span>
+          <a href="/collections/all">Supplements</a>
+          <span>/</span>
+          <span>{{ product.title }}</span>
+        </div>
+
+        <!-- Category -->
+        <div class="product-page__category">
+          {{ product.type | default: 'Supplement' }}
+        </div>
+
+        <!-- Title -->
+        <h1 class="product-page__title">{{ product.title }}</h1>
+
+        <!-- Stars -->
+        <div class="product-page__stars">
+          ★★★★★
+          <span>4.9 ({{ product.metafields.reviews.rating_count | default: '250' }} reviews)</span>
+        </div>
+
+        <!-- Price -->
+        <div class="product-page__price-row">
+          <span class="product-page__price">
+            {{ product.price | money }}
+          </span>
+          {% if product.compare_at_price > product.price %}
+            <span class="product-page__old-price">
+              {{ product.compare_at_price | money }}
+            </span>
+            <span class="badge badge--sale">
+              Save {{ product.compare_at_price | minus: product.price | money }}
+            </span>
+          {% endif %}
+        </div>
+
+        <!-- Short Description -->
+        {% if product.description != blank %}
+          <div class="product-page__desc">
+            {{ product.description | truncate: 200 }}
+          </div>
+        {% endif %}
+
+        <!-- Variants — size/flavour selector -->
+        {% if product.variants.size > 1 %}
+          <div class="product-page__variants">
+            <label class="product-page__variant-label">
+              Choose Option:
+            </label>
+            <div class="product-page__variant-btns" id="variantBtns">
+              {% for variant in product.variants %}
+                <button
+                  class="variant-btn {% if forloop.first %}variant-btn--active{% endif %}"
+                  data-variant-id="{{ variant.id }}"
+                  data-price="{{ variant.price | money }}"
+                  onclick="selectVariant(this)"
+                >
+                  {{ variant.title }}
+                </button>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Quantity -->
+        <div class="product-page__qty">
+          <label class="product-page__variant-label">Quantity:</label>
+          <div class="qty-selector">
+            <button onclick="changeQty(-1)" class="qty-btn">−</button>
+            <input type="number" id="qtyInput" value="1" min="1" max="10" class="qty-input" readonly>
+            <button onclick="changeQty(1)" class="qty-btn">+</button>
+          </div>
+        </div>
+
+        <!-- Add to Cart Form -->
+        <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-page__form">
+          <input type="hidden" name="id" id="selectedVariant" value="{{ product.variants.first.id }}">
+          <input type="hidden" name="quantity" id="formQty" value="1">
+
+          <button type="submit" class="btn btn--primary btn--full btn--lg product-page__atc">
+            🛒 Add to Cart
+          </button>
+        </form>
+
+        <!-- AI Coach CTA -->
+        <a href="/pages/ai-coach" class="product-page__ai-cta">
+          🤖 Not sure if this is right for you? Ask our AI Coach →
+        </a>
+
+        <!-- Trust Badges -->
+        <div class="product-page__trust">
+          <div class="product-trust-item">
+            <span>🛡️</span>
+            <p>Lab Tested</p>
+          </div>
+          <div class="product-trust-item">
+            <span>🚚</span>
+            <p>Fast Shipping</p>
+          </div>
+          <div class="product-trust-item">
+            <span>↩️</span>
+            <p>7-Day Return</p>
+          </div>
+          <div class="product-trust-item">
+            <span>💳</span>
+            <p>Secure Pay</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Full Description -->
+    {% if product.description != blank %}
+      <div class="product-page__full-desc">
+        <h2>Product Details</h2>
+        <div class="product-page__desc-content">
+          {{ product.description }}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+.product-page {
+  padding: 48px 0 80px;
+}
+
+.product-page__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Gallery */
+.product-page__main-img {
+  background: var(--color-bg-light);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-page__main-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-page__img-placeholder {
+  font-size: 80px;
+}
+
+.product-page__thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.product-page__thumb {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.product-page__thumb.active {
+  border-color: var(--color-orange);
+}
+
+/* Info Side */
+.product-page__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+}
+
+.product-page__breadcrumb a:hover {
+  color: var(--color-orange);
+}
+
+.product-page__category {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: 8px;
+}
+
+.product-page__title {
+  font-family: var(--font-heading);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 700;
+  color: var(--color-black);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+
+.product-page__stars {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  color: var(--color-orange);
+  margin-bottom: 20px;
+}
+
+.product-page__stars span {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.product-page__price-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.product-page__price {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+.product-page__old-price {
+  font-size: 18px;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+.product-page__desc {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Variants */
+.product-page__variants {
+  margin-bottom: 20px;
+}
+
+.product-page__variant-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 10px;
+}
+
+.product-page__variant-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.variant-btn {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  color: var(--color-black);
+  background: var(--color-white);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.variant-btn:hover {
+  border-color: var(--color-orange);
+  color: var(--color-orange);
+}
+
+.variant-btn--active {
+  background: var(--color-orange);
+  color: var(--color-white);
+  border-color: var(--color-orange);
+}
+
+/* Quantity */
+.product-page__qty {
+  margin-bottom: 24px;
+}
+
+.qty-selector {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  width: fit-content;
+  margin-top: 10px;
+}
+
+.qty-btn {
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-black);
+  background: var(--color-bg-light);
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-btn:hover {
+  background: var(--color-orange);
+  color: var(--color-white);
+}
+
+.qty-input {
+  width: 52px;
+  height: 40px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  outline: none;
+}
+
+/* Add to Cart */
+.product-page__form {
+  margin-bottom: 16px;
+}
+
+.product-page__atc {
+  font-size: 15px;
+  padding: 16px;
+}
+
+/* AI Coach CTA */
+.product-page__ai-cta {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-orange);
+  text-align: center;
+  padding: 12px;
+  border: 1px dashed var(--color-orange);
+  border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+  transition: background 0.2s;
+}
+
+.product-page__ai-cta:hover {
+  background: var(--color-orange-light);
+}
+
+/* Trust Badges */
+.product-page__trust {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+.product-trust-item {
+  text-align: center;
+  padding: 12px 8px;
+  background: var(--color-bg-light);
+  border-radius: var(--radius-sm);
+}
+
+.product-trust-item span {
+  font-size: 22px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.product-trust-item p {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* Full Description */
+.product-page__full-desc {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid var(--color-border);
+}
+
+.product-page__full-desc h2 {
+  color: var(--color-black);
+  margin-bottom: 24px;
+}
+
+.product-page__desc-content {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.8;
+  max-width: 720px;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .product-page__inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .product-page__trust {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
-{% endschema %}
+</style>
+
+<!-- Product Page JavaScript -->
+<script>
+  // Variant selector
+  function selectVariant(btn) {
+    document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('variant-btn--active'));
+    btn.classList.add('variant-btn--active');
+    document.getElementById('selectedVariant').value = btn.dataset.variantId;
+  }
+
+  // Quantity selector
+  function changeQty(change) {
+    const input = document.getElementById('qtyInput');
+    const formQty = document.getElementById('formQty');
+    let current = parseInt(input.value);
+    let newVal = Math.min(Math.max(current + change, 1), 10);
+    input.value = newVal;
+    formQty.value = newVal;
+  }
+</script>

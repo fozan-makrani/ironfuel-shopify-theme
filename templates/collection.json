@@ -9,12 +9,10 @@
  */
 {
   "sections": {
-    "main": {
+    "collection-main": {
       "type": "collection",
       "settings": {}
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["collection-main"]
 }
