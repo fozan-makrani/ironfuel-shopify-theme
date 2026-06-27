@@ -1,0 +1,771 @@
+/* ============================================
+   IRONFUEL — THEME.CSS
+   Global styles for the entire store
+   ============================================ */
+
+
+/* ============================================
+   1. CSS VARIABLES — Our Design System
+   Think of these as our store's color palette.
+   Change a value here = changes everywhere.
+   ============================================ */
+
+:root {
+  /* Brand Colors */
+  --color-orange:        #F97316;
+  --color-orange-dark:   #C2580A;
+  --color-orange-light:  #FFF4ED;
+  --color-orange-mid:    #FDEBD9;
+
+  /* Base Colors */
+  --color-black:         #111111;
+  --color-black-2:       #1C1C1C;
+  --color-black-3:       #2A2A2A;
+  --color-white:         #FFFFFF;
+
+  /* Text Colors */
+  --color-text-primary:  #111111;
+  --color-text-muted:    #6B6B6B;
+  --color-text-light:    #AAAAAA;
+
+  /* Border & Background */
+  --color-border:        #E5E5E5;
+  --color-bg-light:      #F9F9F9;
+
+  /* Typography */
+  --font-main:           'Barlow', sans-serif;
+  --font-heading:        'Barlow Condensed', sans-serif;
+
+  /* Spacing */
+  --spacing-xs:   4px;
+  --spacing-sm:   8px;
+  --spacing-md:   16px;
+  --spacing-lg:   24px;
+  --spacing-xl:   40px;
+  --spacing-xxl:  64px;
+
+  /* Border Radius */
+  --radius-sm:    3px;
+  --radius-md:    6px;
+  --radius-lg:    12px;
+
+  /* Max width of our store content */
+  --max-width:    1200px;
+}
+
+
+/* ============================================
+   2. RESET — Remove browser default styles
+   Every browser adds its own styles.
+   This removes them so we start clean.
+   ============================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  font-size: 16px;
+  color: var(--color-text-primary);
+  background-color: var(--color-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-main);
+}
+
+input, textarea, select {
+  font-family: var(--font-main);
+}
+
+
+/* ============================================
+   3. TYPOGRAPHY — Headings & Text
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.15;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+h1 { font-size: clamp(32px, 5vw, 56px); }
+h2 { font-size: clamp(26px, 4vw, 40px); }
+h3 { font-size: clamp(20px, 3vw, 28px); }
+h4 { font-size: 18px; }
+
+p {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+
+/* ============================================
+   4. UTILITY CLASSES — Reusable helpers
+   Like shortcuts we use everywhere
+   ============================================ */
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.section {
+  padding: var(--spacing-xl) 0;
+}
+
+.section--dark {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+.section--light {
+  background: var(--color-bg-light);
+}
+
+.text-orange { color: var(--color-orange); }
+.text-white  { color: var(--color-white); }
+.text-muted  { color: var(--color-text-muted); }
+
+.text-center { text-align: center; }
+.text-upper  { text-transform: uppercase; letter-spacing: 1px; }
+
+.flex        { display: flex; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between{ display: flex; align-items: center; justify-content: space-between; }
+.gap-sm      { gap: var(--spacing-sm); }
+.gap-md      { gap: var(--spacing-md); }
+.gap-lg      { gap: var(--spacing-lg); }
+
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-lg); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-lg); }
+
+
+/* ============================================
+   5. BUTTONS — Our store's button styles
+   ============================================ */
+
+.btn {
+  display: inline-block;
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* Primary — Orange solid button */
+.btn--primary {
+  background: var(--color-orange);
+  color: var(--color-white);
+  border: 2px solid var(--color-orange);
+}
+.btn--primary:hover {
+  background: var(--color-orange-dark);
+  border-color: var(--color-orange-dark);
+}
+
+/* Secondary — Dark solid button */
+.btn--secondary {
+  background: var(--color-black);
+  color: var(--color-white);
+  border: 2px solid var(--color-black);
+}
+.btn--secondary:hover {
+  background: var(--color-black-2);
+}
+
+/* Ghost — Transparent with border */
+.btn--ghost {
+  background: transparent;
+  color: var(--color-white);
+  border: 2px solid rgba(255,255,255,0.4);
+}
+.btn--ghost:hover {
+  border-color: var(--color-white);
+  background: rgba(255,255,255,0.08);
+}
+
+/* Ghost Dark — for light backgrounds */
+.btn--ghost-dark {
+  background: transparent;
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+}
+.btn--ghost-dark:hover {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+/* Full width button */
+.btn--full { width: 100%; text-align: center; }
+
+/* Large button */
+.btn--lg {
+  font-size: 15px;
+  padding: 16px 36px;
+}
+
+
+/* ============================================
+   6. BADGE — Small label tags on products
+   ============================================ */
+
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: var(--radius-sm);
+}
+
+.badge--hot  { background: var(--color-orange);  color: #fff; }
+.badge--new  { background: var(--color-black);   color: #fff; }
+.badge--sale { background: #E24B4A;              color: #fff; }
+.badge--free { background: #22C55E;              color: #fff; }
+
+
+/* ============================================
+   7. ANNOUNCEMENT BAR — Top orange strip
+   ============================================ */
+
+.announcement-bar {
+  background: var(--color-orange);
+  padding: 8px var(--spacing-lg);
+  text-align: center;
+}
+
+.announcement-bar p {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-white);
+  letter-spacing: 0.4px;
+  margin: 0;
+}
+
+.announcement-bar strong {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+
+/* ============================================
+   8. NAVBAR — Top navigation
+   ============================================ */
+
+.navbar {
+  background: var(--color-black);
+  border-bottom: 1px solid var(--color-black-3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+}
+
+/* Logo */
+.navbar__logo {
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.navbar__logo span {
+  color: var(--color-orange);
+}
+
+/* Nav links */
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.navbar__links a {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #CCCCCC;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+
+.navbar__links a:hover {
+  color: var(--color-orange);
+}
+
+/* Right icons */
+.navbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+.navbar__icon {
+  color: #AAAAAA;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.navbar__icon:hover {
+  color: var(--color-orange);
+}
+
+/* Cart count bubble */
+.navbar__cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--color-orange);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Hide cart count when 0 */
+.navbar__cart-count:empty,
+.navbar__cart-count[data-count="0"] {
+  display: none;
+}
+
+/* Hamburger button — only shows on mobile */
+.navbar__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.navbar__hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--color-white);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Hamburger X animation when active */
+.navbar__hamburger.active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.navbar__hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.navbar__hamburger.active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile dropdown menu */
+.navbar__mobile {
+  display: none;
+  flex-direction: column;
+  background: var(--color-black-2);
+  border-top: 1px solid var(--color-black-3);
+  padding: var(--spacing-md) var(--spacing-lg);
+  gap: var(--spacing-md);
+}
+
+.navbar__mobile.open {
+  display: flex;
+}
+
+.navbar__mobile a {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #CCCCCC;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-black-3);
+  transition: color 0.2s;
+}
+
+.navbar__mobile a:hover {
+  color: var(--color-orange);
+}
+
+
+/* ============================================
+   9. FOOTER
+   ============================================ */
+
+.footer {
+  background: var(--color-black);
+  color: var(--color-white);
+  padding-top: var(--spacing-xxl);
+}
+
+.footer__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: var(--spacing-xl);
+  padding-bottom: var(--spacing-xl);
+  border-bottom: 1px solid var(--color-black-3);
+}
+
+.footer__logo {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-md);
+}
+
+.footer__logo span {
+  color: var(--color-orange);
+}
+
+.footer__brand p {
+  font-size: 14px;
+  color: #888888;
+  max-width: 280px;
+  line-height: 1.7;
+}
+
+.footer__links h4 {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--color-white);
+  margin-bottom: var(--spacing-md);
+}
+
+.footer__links a,
+.footer__links p {
+  display: block;
+  font-size: 14px;
+  color: #888888;
+  margin-bottom: var(--spacing-sm);
+  transition: color 0.2s;
+  line-height: 1.6;
+}
+
+.footer__links a:hover {
+  color: var(--color-orange);
+}
+
+.footer__bottom {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--spacing-lg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer__bottom p {
+  font-size: 13px;
+  color: #555555;
+  margin: 0;
+}
+
+
+/* ============================================
+   10. FLOATING AI COACH BUTTON
+   ============================================ */
+
+.ai-float-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: var(--color-orange);
+  color: var(--color-white);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 12px 20px;
+  border-radius: 50px;
+  box-shadow: 0 4px 20px rgba(249, 115, 22, 0.4);
+  z-index: 999;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ai-float-btn:hover {
+  background: var(--color-orange-dark);
+  transform: translateY(-2px);
+}
+
+
+/* ============================================
+   11. PRODUCT CARD — Used on all listing pages
+   ============================================ */
+
+.product-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+}
+
+.product-card__img {
+  position: relative;
+  background: var(--color-bg-light);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-card__img img {
+  transform: scale(1.04);
+}
+
+.product-card__badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.product-card__body {
+  padding: 14px 16px 18px;
+}
+
+.product-card__category {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: 4px;
+}
+
+.product-card__name {
+  font-family: var(--font-heading);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-black);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.product-card__sub {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+.product-card__stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--color-orange);
+}
+
+.product-card__stars span {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-left: 4px;
+}
+
+.product-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+}
+
+.product-card__price {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+.product-card__old-price {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+  margin-left: 6px;
+}
+
+
+/* ============================================
+   12. TRUST BAR — Used at bottom of pages
+   ============================================ */
+
+.trust-bar {
+  background: var(--color-black);
+  padding: var(--spacing-lg) var(--spacing-lg);
+}
+
+.trust-bar__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-md);
+}
+
+.trust-item {
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+.trust-item__icon {
+  font-size: 28px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.trust-item p {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #CCCCCC;
+  margin: 0;
+}
+
+
+/* ============================================
+   13. RESPONSIVE — Mobile styles
+   Anything below 768px = mobile
+   ============================================ */
+
+@media (max-width: 768px) {
+
+  /* Hide desktop nav links on mobile */
+  .navbar__links {
+    display: none;
+  }
+
+  /* Show hamburger on mobile */
+  .navbar__hamburger {
+    display: flex;
+  }
+
+  /* Footer stacks on mobile */
+  .footer__inner {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    text-align: center;
+  }
+
+  /* Grids become single column on mobile */
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  /* 2 column grid on mobile for products */
+  .grid-3--mobile-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Trust bar stacks 2x2 on mobile */
+  .trust-bar__inner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Floating AI button smaller on mobile */
+  .ai-float-btn {
+    bottom: 16px;
+    right: 16px;
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .grid-3--mobile-2 {
+    grid-template-columns: 1fr;
+  }
+}
