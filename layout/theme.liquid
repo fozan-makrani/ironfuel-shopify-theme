@@ -1,36 +1,146 @@
-<!doctype html>
-<html lang="{{ request.locale.iso_code }}">
-  <head>
-    {% # Inlined CSS Variables %}
-    {% render 'css-variables' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
-    {% comment %}
-      Font preloading:
-      1. Preconnect to font CDN for faster connection
-      2. Preload only the critical font variant (base weight)
-      3. Additional variants load on-demand via @font-face
-    {% endcomment %}
-    {% unless settings.type_primary_font.system? %}
-      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+  <!-- Basic Meta Tags — tells browser about our store -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      {% comment %} Preload the base font variant for initial page render {% endcomment %}
-      {{ settings.type_primary_font | font_url | preload_tag: as: 'font', crossorigin: 'anonymous' }}
-    {% endunless %}
+  <!-- Shopify automatically puts your store title and description here -->
+  <title>{{ page_title }} — IRONFUEL</title>
+  <meta name="description" content="{{ page_description }}">
 
-    {% # Load and preload the critical CSS %}
-    {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
+  <!-- Shopify needs this — handles cart, apps, analytics internally -->
+  {{ content_for_header }}
 
-    {% # Social, title, etc. %}
-    {% render 'meta-tags' %}
+  <!-- Our main CSS file — we will create this next -->
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
 
-    {{ content_for_header }}
-  </head>
+  <!-- Google Fonts — for our typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
 
-  <body>
-    {% sections 'header-group' %}
+</head>
 
+<body>
+
+  <!-- ANNOUNCEMENT BAR — top orange strip -->
+  <div class="announcement-bar">
+    <p>🔥 Use code <strong>GAINS20</strong> for 20% off your first order &nbsp;·&nbsp; Free shipping above ₹999 &nbsp;·&nbsp; COD available</p>
+  </div>
+
+  <!-- NAVBAR — appears on every page -->
+  <header class="navbar">
+    <div class="navbar__inner">
+
+      <!-- Logo -->
+      <a href="/" class="navbar__logo">
+        IRON<span>FUEL</span>
+      </a>
+
+      <!-- Nav Links -->
+      <nav class="navbar__links">
+        <a href="/collections/all">Supplements</a>
+        <a href="/collections/bundles">Bundles</a>
+        <a href="/pages/ai-coach">AI Coach</a>
+        <a href="/collections/all">Shop All</a>
+      </nav>
+
+      <!-- Right Side Icons -->
+      <div class="navbar__right">
+        <a href="/search" class="navbar__icon" aria-label="Search">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </a>
+        <a href="/cart" class="navbar__icon navbar__cart" aria-label="Cart">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <!-- Cart item count — Shopify fills this automatically -->
+          <span class="navbar__cart-count">{{ cart.item_count }}</span>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <button class="navbar__hamburger" id="hamburgerBtn" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+    </div>
+
+    <!-- Mobile Menu — hidden by default, opens on hamburger click -->
+    <div class="navbar__mobile" id="mobileMenu">
+      <a href="/collections/all">Supplements</a>
+      <a href="/collections/bundles">Bundles</a>
+      <a href="/pages/ai-coach">AI Coach</a>
+      <a href="/collections/all">Shop All</a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT — every page's content loads here -->
+  <main id="main-content">
     {{ content_for_layout }}
+  </main>
 
-    {% sections 'footer-group' %}
-  </body>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+
+      <!-- Footer Brand -->
+      <div class="footer__brand">
+        <div class="footer__logo">IRON<span>FUEL</span></div>
+        <p>Premium supplements for serious lifters. Lab tested. Result driven.</p>
+      </div>
+
+      <!-- Footer Links -->
+      <div class="footer__links">
+        <h4>Quick Links</h4>
+        <a href="/collections/all">All Products</a>
+        <a href="/pages/ai-coach">AI Coach</a>
+        <a href="/collections/bundles">Bundles</a>
+        <a href="/pages/contact">Contact</a>
+      </div>
+
+      <!-- Footer Support -->
+      <div class="footer__links">
+        <h4>Support</h4>
+        <a href="#">Shipping Policy</a>
+        <a href="#">Return Policy</a>
+        <a href="#">FAQ</a>
+        <a href="#">Track Order</a>
+      </div>
+
+      <!-- Footer Contact -->
+      <div class="footer__links">
+        <h4>Contact</h4>
+        <p>support@ironfuel.in</p>
+        <p>Mon–Sat, 10am – 6pm</p>
+      </div>
+
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer__bottom">
+      <p>© 2026 IRONFUEL. All rights reserved.</p>
+      <p>Built with 💪 for serious lifters.</p>
+    </div>
+  </footer>
+
+  <!-- FLOATING AI COACH BUTTON — visible on every page -->
+  <a href="/pages/ai-coach" class="ai-float-btn" aria-label="AI Coach">
+    🤖 AI Coach
+  </a>
+
+  <!-- MOBILE MENU TOGGLE SCRIPT -->
+  <script>
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburgerBtn.addEventListener('click', function() {
+      mobileMenu.classList.toggle('open');
+      hamburgerBtn.classList.toggle('active');
+    });
+  </script>
+
+</body>
 </html>
