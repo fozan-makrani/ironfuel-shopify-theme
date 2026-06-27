@@ -1,0 +1,180 @@
+<!-- =============================================
+     FEATURED PRODUCTS SECTION
+     Shows best seller products.
+     Pulls real products from your Shopify store.
+     ============================================= -->
+
+<section class="section">
+  <div class="container">
+
+    <div class="featured__header">
+      <h2>Best Sellers</h2>
+      <a href="/collections/all" class="featured__see-all">View All →</a>
+    </div>
+
+    <div class="featured__grid">
+
+      {% comment %}
+        This loops through your actual Shopify products.
+        Once you add products in Shopify Admin, they show here automatically.
+      {% endcomment %}
+
+      {% assign featured = collections['all'].products | limit: 3 %}
+
+      {% if featured.size > 0 %}
+
+        {% for product in featured %}
+          <div class="product-card">
+
+            <!-- Product Image -->
+            <div class="product-card__img">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 600 }}"
+                  alt="{{ product.title }}"
+                  loading="lazy"
+                >
+              {% else %}
+                <!-- Placeholder if no image added yet -->
+                <div class="product-card__placeholder">
+                  <span>💪</span>
+                </div>
+              {% endif %}
+
+              <!-- Badge -->
+              <div class="product-card__badge">
+                {% if product.compare_at_price > product.price %}
+                  <span class="badge badge--sale">Sale</span>
+                {% else %}
+                  <span class="badge badge--hot">Best Seller</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-card__body">
+              <div class="product-card__category">
+                {{ product.type | default: 'Supplement' }}
+              </div>
+              <h3 class="product-card__name">{{ product.title }}</h3>
+              <p class="product-card__sub">
+                {{ product.variants.first.title | default: '' }}
+              </p>
+
+              <!-- Stars — static for now -->
+              <div class="product-card__stars">
+                ★★★★★
+                <span>({{ product.metafields.reviews.rating_count | default: '100+' }})</span>
+              </div>
+
+              <!-- Price + Button -->
+              <div class="product-card__footer">
+                <div>
+                  <span class="product-card__price">
+                    {{ product.price | money }}
+                  </span>
+                  {% if product.compare_at_price > product.price %}
+                    <span class="product-card__old-price">
+                      {{ product.compare_at_price | money }}
+                    </span>
+                  {% endif %}
+                </div>
+                <a href="{{ product.url }}" class="btn btn--primary">
+                  Buy Now
+                </a>
+              </div>
+            </div>
+
+          </div>
+        {% endfor %}
+
+      {% else %}
+
+        <!-- Show placeholder cards if no products added yet -->
+        {% for i in (1..3) %}
+          <div class="product-card">
+            <div class="product-card__img">
+              <div class="product-card__placeholder"><span>💪</span></div>
+              <div class="product-card__badge">
+                <span class="badge badge--hot">Best Seller</span>
+              </div>
+            </div>
+            <div class="product-card__body">
+              <div class="product-card__category">Supplement</div>
+              <h3 class="product-card__name">Product Coming Soon</h3>
+              <p class="product-card__sub">Add products in Shopify Admin</p>
+              <div class="product-card__stars">★★★★★ <span>(100+)</span></div>
+              <div class="product-card__footer">
+                <span class="product-card__price">₹0.00</span>
+                <a href="/collections/all" class="btn btn--primary">Shop Now</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+.featured__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.featured__header h2 {
+  color: var(--color-black);
+}
+
+.featured__see-all {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-orange);
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+
+.featured__see-all:hover {
+  color: var(--color-orange-dark);
+}
+
+.featured__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* Placeholder when no image */
+.product-card__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F3F3F3;
+  min-height: 220px;
+  font-size: 48px;
+}
+
+@media (max-width: 768px) {
+  .featured__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .featured__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .featured__grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

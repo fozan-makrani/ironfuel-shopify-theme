@@ -1,0 +1,252 @@
+<!-- =============================================
+     HERO SECTION
+     The big banner on the home page.
+     Has headline, subtext, 2 buttons, stats.
+     ============================================= -->
+
+<section class="hero">
+  <div class="hero__inner">
+
+    <!-- Left Side — Text Content -->
+    <div class="hero__content">
+
+      <div class="hero__eyebrow">
+        🔥 Fuel your gains · 2026
+      </div>
+
+      <h1 class="hero__heading">
+        Train Hard.<br>
+        <span class="text-orange">Eat Right.</span><br>
+        Get Results.
+      </h1>
+
+      <p class="hero__subtext">
+        Tell our AI your goals — get a custom supplement stack
+        + workout plan. All products from our store.
+        No guesswork. Just gains.
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="hero__btns">
+        <a href="/pages/ai-coach" class="btn btn--primary btn--lg">
+          🤖 Get My AI Plan
+        </a>
+        <a href="/collections/all" class="btn btn--ghost btn--lg">
+          Shop All
+        </a>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="hero__stats">
+        <div class="hero__stat">
+          <strong>50,000+</strong>
+          <span>Happy Lifters</span>
+        </div>
+        <div class="hero__stat">
+          <strong>100%</strong>
+          <span>Lab Tested</span>
+        </div>
+        <div class="hero__stat">
+          <strong>48hr</strong>
+          <span>Fast Delivery</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Side — Visual -->
+    <div class="hero__visual">
+      <div class="hero__visual-card">
+        <div class="hero__visual-icon">💪</div>
+        <div class="hero__visual-products">
+          <div class="hero__product-pill">
+            <span class="hero__product-dot"></span>
+            Whey Protein Isolate
+          </div>
+          <div class="hero__product-pill">
+            <span class="hero__product-dot"></span>
+            Pre-Workout Xtreme
+          </div>
+          <div class="hero__product-pill">
+            <span class="hero__product-dot"></span>
+            Creatine Monohydrate
+          </div>
+          <div class="hero__product-pill">
+            <span class="hero__product-dot"></span>
+            BCAA Recovery
+          </div>
+        </div>
+        <div class="hero__visual-label">
+          AI Recommended Stack ✓
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- =============================================
+     HERO CSS — scoped to this section only
+     ============================================= -->
+
+<style>
+.hero {
+  background: var(--color-black);
+  padding: 80px 0 60px;
+  border-bottom: 3px solid var(--color-orange);
+  overflow: hidden;
+}
+
+.hero__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Eyebrow — small label above heading */
+.hero__eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  margin-bottom: 20px;
+}
+
+/* Main heading */
+.hero__heading {
+  font-size: clamp(38px, 5vw, 64px);
+  font-weight: 700;
+  color: var(--color-white);
+  line-height: 1.05;
+  margin-bottom: 24px;
+}
+
+/* Subtext */
+.hero__subtext {
+  font-size: 16px;
+  color: #AAAAAA;
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 36px;
+}
+
+/* Buttons row */
+.hero__btns {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 48px;
+}
+
+/* Stats row */
+.hero__stats {
+  display: flex;
+  gap: 40px;
+  border-top: 1px solid #2A2A2A;
+  padding-top: 32px;
+}
+
+.hero__stat strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-orange);
+  letter-spacing: 1px;
+}
+
+.hero__stat span {
+  font-size: 12px;
+  color: #777777;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Right visual card */
+.hero__visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero__visual-card {
+  background: #1C1C1C;
+  border: 1px solid #2A2A2A;
+  border-top: 3px solid var(--color-orange);
+  border-radius: 12px;
+  padding: 32px 28px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.hero__visual-icon {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.hero__visual-products {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* Each product pill in the visual card */
+.hero__product-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #2A2A2A;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #EEEEEE;
+  letter-spacing: 0.3px;
+}
+
+.hero__product-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-orange);
+  flex-shrink: 0;
+}
+
+.hero__visual-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-orange);
+  text-align: center;
+  padding-top: 16px;
+  border-top: 1px solid #2A2A2A;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .hero__visual {
+    order: -1;
+  }
+
+  .hero__visual-card {
+    max-width: 100%;
+  }
+
+  .hero__stats {
+    gap: 24px;
+  }
+}
+</style>

@@ -9,12 +9,32 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "hello-world",
+    "hero": {
+      "type": "hero",
+      "settings": {}
+    },
+    "ai-strip": {
+      "type": "ai-strip",
+      "settings": {}
+    },
+    "categories": {
+      "type": "categories",
+      "settings": {}
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "settings": {}
+    },
+    "trust-bar": {
+      "type": "trust-bar",
       "settings": {}
     }
   },
   "order": [
-    "main"
+    "hero",
+    "ai-strip",
+    "categories",
+    "featured-products",
+    "trust-bar"
   ]
 }

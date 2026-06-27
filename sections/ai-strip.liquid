@@ -1,0 +1,73 @@
+<!-- =============================================
+     AI STRIP SECTION
+     Orange banner below hero.
+     Invites users to try the AI Coach.
+     ============================================= -->
+
+<section class="ai-strip">
+  <div class="ai-strip__inner">
+
+    <div class="ai-strip__left">
+      <div class="ai-strip__icon">🤖</div>
+      <div class="ai-strip__text">
+        <p class="ai-strip__title">AI Fitness Coach — Get Your Personal Supplement Plan</p>
+        <p class="ai-strip__sub">Answer 5 quick questions · Takes 60 seconds · Completely free</p>
+      </div>
+    </div>
+
+    <a href="/pages/ai-coach" class="btn btn--secondary">
+      Start Now →
+    </a>
+
+  </div>
+</section>
+
+<style>
+.ai-strip {
+  background: var(--color-orange-light);
+  border-bottom: 1px solid #FBDBBF;
+  padding: 20px 0;
+}
+
+.ai-strip__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.ai-strip__left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ai-strip__icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.ai-strip__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-orange-dark);
+  margin: 0 0 3px;
+}
+
+.ai-strip__sub {
+  font-size: 12px;
+  color: #854F0B;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .ai-strip__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+</style>
